@@ -1,39 +1,26 @@
 # ==========================================================
-# FUTURIO ASTRA v2.0 – COMMERCIAL EDITION
-# Senior Fullstack & Career Data Intelligence Build
+# FUTURIO v3.0 – Epic Creative Edition
+# Senior Creative Developer Build
 # ==========================================================
 
 import streamlit as st
 import numpy as np
 import random
 import plotly.graph_objects as go
+import time
 
 # ==========================================================
 # CONFIG
 # ==========================================================
 
 st.set_page_config(
-    page_title="Futurio Astra",
+    page_title="Futurio",
     page_icon="🚀",
     layout="wide"
 )
 
 # ==========================================================
-# PERFORMANCE CACHE
-# ==========================================================
-
-@st.cache_resource
-def load_weights():
-    return {
-        "Logic": 1.4,
-        "Sáng tạo": 1.2,
-        "Giao tiếp": 1.1,
-        "Phân tích": 1.5,
-        "Quản lý": 1.3
-    }
-
-# ==========================================================
-# UI SETUP (DEEP CUSTOM CSS)
+# GLOBAL STYLES – EPIC UI SYSTEM
 # ==========================================================
 
 def setup_ui():
@@ -41,44 +28,104 @@ def setup_ui():
     st.markdown("""
     <style>
 
-    .stApp {
-        background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
-        color: #e2e8f0;
+    /* ================= GOOGLE FONT ================= */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Orbitron', sans-serif;
     }
 
-    /* Centered container */
+    /* ================= BACKGROUND ================= */
+    .stApp {
+        background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
+        color: #F8FAFC;
+        overflow-x: hidden;
+    }
+
+    /* Shooting stars animation */
+    .shooting-star {
+        position: fixed;
+        width: 2px;
+        height: 80px;
+        background: linear-gradient(-45deg, white, transparent);
+        animation: shoot 6s linear infinite;
+        opacity: 0.6;
+    }
+
+    @keyframes shoot {
+        0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1;}
+        100% { transform: translateX(-800px) translateY(800px) rotate(45deg); opacity: 0;}
+    }
+
+    /* ================= CENTER CONTAINER ================= */
     .main-container {
-        max-width: 900px;
+        max-width: 950px;
         margin: auto;
     }
 
-    /* Glass Card */
+    /* ================= LOGO ANIMATION ================= */
+    .logo-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 2px solid #00f2ff;
+        position: relative;
+        margin: auto;
+        box-shadow: 0 0 25px #00f2ff;
+    }
+
+    .logo-circle::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid #7000ff;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1;}
+        100% { transform: scale(1.3); opacity: 0;}
+    }
+
+    /* ================= SLOGAN ================= */
+    .slogan {
+        font-size: 34px;
+        text-align: center;
+        font-weight: 700;
+        background: linear-gradient(90deg,#00f2ff,#7000ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(0,242,255,0.6);
+        margin-top: 20px;
+    }
+
+    .hero-text {
+        text-align: center;
+        font-size: 16px;
+        margin-top: 10px;
+        color: #F8FAFC;
+    }
+
+    /* ================= GLASS CARD ================= */
     .glass {
-        background: rgba(255,255,255,0.05);
-        border-radius: 16px;
-        padding: 28px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 18px;
+        padding: 26px;
         border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 0 25px rgba(0,242,255,0.15);
+        box-shadow: 0 0 25px rgba(0,242,255,0.2);
         margin-bottom: 24px;
+        color: #FFFFFF;
+        text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* Buttons */
-    div.stButton > button {
-        border-radius: 16px !important;
-        background: linear-gradient(90deg,#7000ff,#00f2ff);
-        color: white;
-        border: none;
-        font-weight: 600;
-        padding: 12px 22px;
-        transition: 0.3s;
+    /* ================= SLIDER ================= */
+    .stSlider label {
+        color: #00f2ff !important;
+        font-weight: bold;
     }
 
-    div.stButton > button:hover {
-        transform: scale(1.05);
-        opacity: 0.9;
-    }
-
-    /* Slider Custom */
     div[data-baseweb="slider"] span {
         background: linear-gradient(90deg,#7000ff,#00f2ff) !important;
     }
@@ -88,92 +135,82 @@ def setup_ui():
         border: 2px solid white !important;
     }
 
-    /* Progress Stepper */
-    .stepper {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 30px;
-    }
-
-    .step {
-        flex: 1;
-        text-align: center;
-        padding: 8px;
-        border-radius: 20px;
-        background: rgba(255,255,255,0.05);
-        margin: 0 4px;
-        font-size: 14px;
-    }
-
-    .active-step {
+    /* ================= BUTTON ================= */
+    div.stButton > button {
+        border-radius: 16px !important;
         background: linear-gradient(90deg,#7000ff,#00f2ff);
         color: white;
         font-weight: 600;
+        padding: 12px 24px;
+        transition: 0.3s;
+    }
+
+    div.stButton > button:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    /* ================= SCENARIO COLORS ================= */
+    .card-blue { background: rgba(0,120,255,0.2); }
+    .card-purple { background: rgba(112,0,255,0.25); }
+    .card-orange { background: rgba(255,165,0,0.25); }
+
+    /* ================= RADAR LOADER ================= */
+    .radar-loader {
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top: 3px solid #00f2ff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
     }
 
     </style>
     """, unsafe_allow_html=True)
 
+    # Shooting star instances
+    for i in range(3):
+        st.markdown(f'<div class="shooting-star" style="top:{random.randint(0,300)}px; right:{random.randint(0,500)}px;"></div>', unsafe_allow_html=True)
+
 # ==========================================================
-# CONTENT ENGINE – AVOID REPETITION
+# CONTENT ENGINE v3
 # ==========================================================
 
 def generate_content(skill, score):
 
-    library = {
-        "high": [
-            f"Năng lực {skill} đang ở cấp độ vượt trội.",
-            f"Bạn sở hữu nền tảng {skill} đáng chú ý.",
-            f"{skill} là lợi thế cạnh tranh chiến lược của bạn.",
-            f"Tư duy {skill} của bạn thể hiện độ chín cao.",
-            f"Khả năng {skill} có thể tạo đột phá dài hạn."
-        ],
-        "mid": [
-            f"{skill} đang ở mức ổn định.",
-            f"Bạn có tiềm năng phát triển thêm về {skill}.",
-            f"Năng lực {skill} tương đối cân bằng.",
-            f"{skill} là nền tảng có thể nâng cấp.",
-            f"Bạn đang sở hữu mức {skill} khá."
-        ],
-        "low": [
-            f"{skill} cần được ưu tiên cải thiện.",
-            f"Nâng cấp {skill} sẽ mở rộng cơ hội.",
-            f"{skill} hiện chưa phát huy tối đa.",
-            f"Đầu tư vào {skill} sẽ tăng biên độ phát triển.",
-            f"Bạn nên xây dựng lại chiến lược cho {skill}."
-        ]
-    }
-
     if score >= 4:
-        return random.choice(library["high"])
+        return f"""
+        <div class="glass">
+        <b>{skill} đang ở trạng thái đỉnh cao.</b><br><br>
+        Năng lực này có thể trở thành trục chiến lược trong hồ sơ nghề nghiệp của bạn.
+        Nếu tiếp tục đầu tư, bạn có thể mở rộng ảnh hưởng và đạt cấp độ chuyên gia.<br><br>
+        👉 Lời khuyên vàng: Xây dựng dự án thực tế xoay quanh {skill}.
+        </div>
+        """
     elif score >= 2:
-        return random.choice(library["mid"])
+        return f"""
+        <div class="glass">
+        <b>{skill} đang ở mức ổn định.</b><br><br>
+        Đây là nền tảng tốt để phát triển sâu hơn trong tương lai.
+        Việc nâng cấp kỹ năng này sẽ giúp bạn tăng biên độ lựa chọn ngành nghề.<br><br>
+        👉 Lời khuyên vàng: Đầu tư 30 phút mỗi ngày để rèn luyện {skill}.
+        </div>
+        """
     else:
-        return random.choice(library["low"])
-
-# ==========================================================
-# CALCULATION ENGINE
-# ==========================================================
-
-def calculate_scenarios(skills):
-
-    weights = load_weights()
-
-    # Current
-    current = np.mean(list(skills.values()))
-
-    # Power Up (boost top 2)
-    sorted_skills = sorted(skills.items(), key=lambda x: x[1], reverse=True)
-    boosted = dict(sorted_skills[:2])
-    power = sum(boosted[k]*weights[k] for k in boosted)
-
-    # Pivot (increase weakest)
-    weakest = min(skills, key=skills.get)
-    pivot_skills = skills.copy()
-    pivot_skills[weakest] += 1
-    pivot = np.mean(list(pivot_skills.values()))
-
-    return current, power, pivot
+        return f"""
+        <div class="glass">
+        <b>{skill} là vùng tiềm năng chưa khai phá.</b><br><br>
+        Việc cải thiện năng lực này sẽ giúp bạn mở rộng đáng kể cơ hội.
+        Đây có thể là chìa khóa để chuyển hướng chiến lược sự nghiệp.<br><br>
+        👉 Lời khuyên vàng: Tham gia khóa học nền tảng về {skill}.
+        </div>
+        """
 
 # ==========================================================
 # RADAR CHART
@@ -191,7 +228,6 @@ def render_radar(skills):
         r=values,
         theta=categories + categories[:1],
         fill='toself',
-        name='Hồ sơ năng lực',
         line_color='#00f2ff'
     ))
 
@@ -211,102 +247,66 @@ def render_radar(skills):
     st.plotly_chart(fig, use_container_width=True)
 
 # ==========================================================
-# STEPPER
-# ==========================================================
-
-def render_stepper(step):
-
-    steps = ["Đánh giá", "Kết quả", "Chiến lược", "Tuyên ngôn"]
-
-    html = '<div class="stepper">'
-    for i, name in enumerate(steps, start=1):
-        if i == step:
-            html += f'<div class="step active-step">{i}. {name}</div>'
-        else:
-            html += f'<div class="step">{i}. {name}</div>'
-    html += "</div>"
-
-    st.markdown(html, unsafe_allow_html=True)
-
-# ==========================================================
-# MAIN
+# MAIN APP
 # ==========================================================
 
 def main():
 
     setup_ui()
 
-    if "step" not in st.session_state:
-        st.session_state.step = 1
+    if "page" not in st.session_state:
+        st.session_state.page = "home"
 
-    with st.container():
+    # ================= HOME =================
+    if st.session_state.page == "home":
+
         st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-        render_stepper(st.session_state.step)
+        st.markdown('<div class="logo-circle"></div>', unsafe_allow_html=True)
+        st.markdown('<div class="slogan">Futurio - See Your Future. Shape Your Path.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="hero-text">Khám phá tinh cầu năng lực của bạn thông qua thuật toán AI mô phỏng.</div>', unsafe_allow_html=True)
 
-        # STEP 1
-        if st.session_state.step == 1:
+        with st.expander("📖 Hướng dẫn khai phá"):
+            st.write("1️⃣ Chấm điểm năng lực bằng các Slider.")
+            st.write("2️⃣ Nhấn phân tích để AI quét dữ liệu.")
+            st.write("3️⃣ Nhận chiến lược và Tuyên ngôn tương lai.")
 
-            with st.form("form"):
-                skills = {}
-                skills["Logic"] = st.slider("Logic",0,5,3,key="logic")
-                skills["Sáng tạo"] = st.slider("Sáng tạo",0,5,3,key="creative")
-                skills["Phân tích"] = st.slider("Phân tích",0,5,3,key="analysis")
-                skills["Giao tiếp"] = st.slider("Giao tiếp",0,5,3,key="communication")
-                skills["Quản lý"] = st.slider("Quản lý",0,5,3,key="management")
+        if st.button("🚀 Bắt đầu hành trình"):
+            st.session_state.page = "assessment"
+            st.rerun()
 
-                submit = st.form_submit_button("Phân tích Astra")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-            if submit:
-                st.session_state.skills = skills
-                st.session_state.step = 2
-                st.rerun()
+    # ================= ASSESSMENT =================
+    elif st.session_state.page == "assessment":
 
-        # STEP 2
-        elif st.session_state.step == 2:
+        st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-            skills = st.session_state.skills
-            current, power, pivot = calculate_scenarios(skills)
+        skills = {}
+        skills["🧠 Logic"] = st.slider("Logic",0,5,3)
+        skills["🎨 Sáng tạo"] = st.slider("Sáng tạo",0,5,3)
+        skills["📊 Phân tích"] = st.slider("Phân tích",0,5,3)
+        skills["📢 Giao tiếp"] = st.slider("Giao tiếp",0,5,3)
+        skills["📁 Quản lý"] = st.slider("Quản lý",0,5,3)
 
-            render_radar(skills)
+        if st.button("AI Quét Năng Lực"):
+
+            st.markdown('<div class="radar-loader"></div>', unsafe_allow_html=True)
+            time.sleep(2)
+
+            render_radar({k: v for k, v in skills.items()})
 
             col1, col2, col3 = st.columns(3)
 
-            col1.markdown(f'<div class="glass"><b>Hiện tại</b><br>{round(current,2)}</div>', unsafe_allow_html=True)
-            col2.markdown(f'<div class="glass"><b>Power Up</b><br>{round(power,2)}</div>', unsafe_allow_html=True)
-            col3.markdown(f'<div class="glass"><b>Pivot</b><br>{round(pivot,2)}</div>', unsafe_allow_html=True)
-
-            if st.button("Tiếp tục"):
-                st.session_state.step = 3
-                st.rerun()
-
-        # STEP 3
-        elif st.session_state.step == 3:
-
-            skills = st.session_state.skills
+            col1.markdown(f'<div class="glass card-blue">Hiện tại</div>', unsafe_allow_html=True)
+            col2.markdown(f'<div class="glass card-purple">Power Up</div>', unsafe_allow_html=True)
+            col3.markdown(f'<div class="glass card-orange">Pivot</div>', unsafe_allow_html=True)
 
             for k,v in skills.items():
-                st.markdown(f'<div class="glass">{generate_content(k,v)}</div>', unsafe_allow_html=True)
-
-            if st.button("Tạo Tuyên ngôn"):
-                st.session_state.step = 4
-                st.rerun()
-
-        # STEP 4
-        elif st.session_state.step == 4:
-
-            skills = st.session_state.skills
-            dominant = max(skills, key=skills.get)
-
-            manifesto = f"""
-            Bạn được thiết kế để dẫn dắt bằng {dominant}.
-            Khi khai thác triệt để năng lực này, bạn có thể tạo ra lợi thế chiến lược.
-            Tương lai thuộc về những người hiểu rõ hồ sơ năng lực của mình.
-            """
-
-            st.markdown(f'<div class="glass">{manifesto}</div>', unsafe_allow_html=True)
+                st.markdown(generate_content(k,v), unsafe_allow_html=True)
 
         st.markdown('</div>', unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
