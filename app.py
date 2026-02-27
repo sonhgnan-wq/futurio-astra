@@ -1,5 +1,5 @@
 # ==========================================================
-# FUTURIO v3.8 – ULTIMATE COMPACT EDITION
+# FUTURIO v3.8.1 – FINAL CONTENT & COLOR FIX
 # ==========================================================
 
 import streamlit as st
@@ -17,7 +17,7 @@ if "page" not in st.session_state: st.session_state.page = "home"
 if "analysis_done" not in st.session_state: st.session_state.analysis_done = False
 
 # ==========================================================
-# UI SYSTEM (MAX CONTRAST & COMPACT)
+# UI SYSTEM (MAX CONTRAST)
 # ==========================================================
 
 def setup_ui():
@@ -30,7 +30,7 @@ def setup_ui():
         color: #FFFFFF !important;
     }
 
-    /* NAVBAR SIÊU GỌN */
+    /* NAVBAR GỌN */
     .nav-bar {
         background: rgba(255, 255, 255, 0.05);
         border-bottom: 1px solid rgba(0, 242, 255, 0.3);
@@ -38,7 +38,23 @@ def setup_ui():
         margin-bottom: 10px;
     }
 
-    /* CHỮ FUTURIO TO & RÕ */
+    /* FIX LỖI MÀU TRONG POPOVER (LỢI ÍCH & HƯỚNG DẪN) */
+    div[data-testid="stPopoverBody"] {
+        background-color: #020617 !important;
+        border: 1px solid #00f2ff !important;
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        padding: 20px !important;
+    }
+    div[data-testid="stPopoverBody"] p, 
+    div[data-testid="stPopoverBody"] span, 
+    div[data-testid="stPopoverBody"] li,
+    div[data-testid="stPopoverBody"] strong {
+        color: #FFFFFF !important;
+        font-family: 'sans-serif';
+        line-height: 1.6;
+    }
+
+    /* CHỮ FUTURIO */
     .main-title {
         font-family: 'Orbitron', sans-serif;
         font-size: 80px !important;
@@ -49,17 +65,7 @@ def setup_ui():
         margin-bottom: 0px;
     }
 
-    /* FIX LỖI MÀU TRONG POPOVER */
-    div[data-testid="stPopoverBody"] {
-        background-color: #0f172a !important;
-        color: #FFFFFF !important;
-        border: 1px solid #00f2ff;
-    }
-    div[data-testid="stPopoverBody"] p, div[data-testid="stPopoverBody"] span {
-        color: #FFFFFF !important;
-    }
-
-    /* GLASS CARD V3.2 */
+    /* GLASS CARD */
     .glass {
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -70,24 +76,20 @@ def setup_ui():
         backdrop-filter: blur(10px);
     }
 
-    /* NÚT BẮT ĐẦU GỌN GÀNG */
+    /* NÚT BẮT ĐẦU */
     div.stButton > button {
         background: linear-gradient(90deg, #7000ff, #00f2ff) !important;
         color: white !important;
         font-weight: bold;
         border-radius: 25px;
         padding: 10px 40px !important;
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
     }
 
-    /* MANIFESTO GOLD */
     .manifesto-box {
         font-family: 'Playfair Display', serif;
         border: 1px solid #FFD700;
         background: rgba(255, 215, 0, 0.05);
         padding: 20px;
-        text-align: center;
-        font-size: 1.2rem;
     }
 
     .stSlider label { color: #00f2ff !important; font-weight: bold; }
@@ -95,7 +97,7 @@ def setup_ui():
     """, unsafe_allow_html=True)
 
 # ==========================================================
-# DIVERSIFIED ANALYSIS BANK (TRẢ LẠI PHẦN ĐA DẠNG)
+# ANALYSIS ENGINE
 # ==========================================================
 
 def get_deep_analysis(skill, score):
@@ -119,25 +121,41 @@ def get_deep_analysis(skill, score):
 
 setup_ui()
 
-# --- NAVBAR SIÊU GỌN PHÍA TRÊN ---
+# --- NAVBAR SIÊU GỌN ---
 st.markdown('<div class="nav-bar">', unsafe_allow_html=True)
 nav_cols = st.columns([1, 1, 1, 1])
 with nav_cols[0]:
-    if st.button("🏠 Trang chủ", use_container_width=True):
+    if st.button("🏠 Trang chủ", key="nav_home", use_container_width=True):
         st.session_state.page = "home"
         st.session_state.analysis_done = False
         st.rerun()
+
 with nav_cols[1]:
-    with st.popover("🌟 Lợi ích", use_container_width=True):
-        st.markdown("**Futurio giúp bạn:**\n- Hiểu rõ 5 trục năng lực.\n- Nhận diện điểm mạnh mũi nhọn.\n- Tối ưu lộ trình sự nghiệp.")
+    with st.popover("🌟 Lợi ích chi tiết", use_container_width=True):
+        st.markdown("""
+        ### Tại sao chọn Futurio?
+        
+        * **Định vị bản sắc:** Xác định chính xác 5 trục năng lực cốt lõi thông qua thuật toán mô phỏng.
+        * **Phát hiện điểm mù:** AI chỉ ra những kỹ năng bạn đang bỏ lỡ để tránh rủi ro trong sự nghiệp.
+        * **Tối ưu lộ trình:** Tiết kiệm thời gian bằng cách tập trung vào kỹ năng 'mũi nhọn' thay vì dàn trải.
+        * **Tuyên ngôn sứ mệnh:** Nhận lời khuyên chiến lược được cá nhân hóa dựa trên sự kết hợp độc đáo của các chỉ số.
+        """)
+
 with nav_cols[2]:
-    with st.popover("📖 Hướng dẫn", use_container_width=True):
-        st.markdown("1. Chấm điểm Slider.\n2. Nhấn AI Quét.\n3. Xem phân tích đa chiều.")
+    with st.popover("📖 Hướng dẫn khai phá", use_container_width=True):
+        st.markdown("""
+        ### Quy trình 3 bước:
+        
+        1.  **Bước 1 - Đánh giá:** Kéo các thanh trượt (Slider) để tự chấm điểm năng lực của bạn từ 1 đến 5. Hãy trung thực để có kết quả chính xác nhất.
+        2.  **Bước 2 - AI Quét:** Nhấn nút 'AI Quét Năng Lực' để hệ thống bắt đầu tính toán các kịch bản tương lai và vẽ biểu đồ Radar.
+        3.  **Bước 3 - Khám phá:** Chuyển đổi giữa các Tab để xem biểu đồ trực quan, đọc phân tích chuyên sâu cho từng kỹ năng và nhận Tuyên ngôn sứ mệnh của riêng bạn.
+        """)
+
 with nav_cols[3]:
-    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:5px;">v3.8 PRO</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:5px;">v3.8.1 PRO</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TRANG CHỦ (GỌN LÊN KHÔNG CẦN KÉO) ---
+# --- HOME ---
 if st.session_state.page == "home":
     st.markdown('<div class="main-title">FUTURIO</div>', unsafe_allow_html=True)
     st.markdown("<h3 style='text-align:center; margin-top:-10px; opacity:0.8;'>See Your Future. Shape Your Path.</h3>", unsafe_allow_html=True)
@@ -153,11 +171,11 @@ if st.session_state.page == "home":
     st.markdown("<br>", unsafe_allow_html=True)
     _, btn_center, _ = st.columns([1.2, 1, 1.2])
     with btn_center:
-        if st.button("🚀 BẮT ĐẦU HÀNH TRÌNH", use_container_width=True):
+        if st.button("🚀 BẮT ĐẦU HÀNH TRÌNH", key="start_btn", use_container_width=True):
             st.session_state.page = "assessment"
             st.rerun()
 
-# --- TRANG ĐÁNH GIÁ (GIỮ NGUYÊN BỐ CỤC) ---
+# --- ASSESSMENT ---
 elif st.session_state.page == "assessment":
     st.markdown("<h2 style='text-align:center;'>🌌 ĐÁNH GIÁ NĂNG LỰC</h2>", unsafe_allow_html=True)
     
@@ -174,7 +192,7 @@ elif st.session_state.page == "assessment":
             skills[s] = st.slider(s, 1, 5, 3)
             st.markdown('</div>', unsafe_allow_html=True)
             
-    if st.button("AI QUÉT NĂNG LỰC"):
+    if st.button("AI QUÉT NĂNG LỰC", key="scan_btn"):
         with st.spinner("AI đang xử lý tinh cầu năng lực..."):
             time.sleep(1.2)
         st.session_state.skills = skills
