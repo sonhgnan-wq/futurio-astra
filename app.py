@@ -1,23 +1,17 @@
 # ==========================================================
-# FUTURIO v3.2 – Epic Stability Fusion Edition
-# Senior Streamlit Developer Build
+# FUTURIO v3.6 – THE COSMIC RESURRECTION (FINAL)
 # ==========================================================
 
 import streamlit as st
-import numpy as np
 import plotly.graph_objects as go
 import random
 import time
 
 # ==========================================================
-# CONFIG
+# CONFIG & STATE
 # ==========================================================
 
-st.set_page_config(page_title="Futurio", page_icon="🚀", layout="wide")
-
-# ==========================================================
-# STATE INIT
-# ==========================================================
+st.set_page_config(page_title="Futurio v3.6", page_icon="🚀", layout="wide")
 
 def initialize_state():
     defaults = {
@@ -26,272 +20,270 @@ def initialize_state():
         "skills": {},
         "manifesto": ""
     }
-    for k,v in defaults.items():
+    for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
 
 # ==========================================================
-# GLOBAL UI (EPIC STYLE)
+# UI SYSTEM (RESTORING v3.2 AESTHETICS & FIXING LOGO)
 # ==========================================================
 
 def setup_ui():
-
     st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Playfair+Display:ital,wght@1,600&display=swap');
 
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Playfair+Display:wght@600&display=swap');
-
-    html, body, [class*="css"] {
-        font-family: 'Orbitron', sans-serif;
-    }
-
+    /* Toàn bộ giao diện */
     .stApp {
-        background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
+        background: radial-gradient(circle at center, #0f172a, #020617);
         color: #FFFFFF;
-        overflow-x: hidden;
     }
 
-    /* SHOOTING STARS */
+    /* Hiệu ứng sao rơi */
     .shooting-star {
         position: fixed;
         width: 2px;
-        height: 80px;
-        background: linear-gradient(-45deg, white, transparent);
-        animation: shoot 6s linear infinite;
-        opacity: 0.6;
+        height: 70px;
+        background: linear-gradient(to bottom, white, transparent);
+        animation: shoot 4s linear infinite;
+        opacity: 0.3;
+        z-index: 0;
     }
-
     @keyframes shoot {
-        0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1;}
-        100% { transform: translateX(-800px) translateY(800px) rotate(45deg); opacity: 0;}
+        0% { transform: translateY(-100px) translateX(0); opacity: 1; }
+        100% { transform: translateY(100vh) translateX(200px); opacity: 0; }
     }
 
-    /* LOGO */
+    /* Navbar tinh tế v3.6 */
+    .nav-bar {
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px 0;
+        margin-bottom: 30px;
+    }
+
+    /* Logo vòng tròn v3.2 (Đã sửa lỗi đen xì) */
     .logo-circle {
-        width: 120px;
-        height: 120px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         border: 2px solid #00f2ff;
+        box-shadow: 0 0 15px #00f2ff;
         margin: auto;
-        box-shadow: 0 0 30px #00f2ff;
         position: relative;
     }
-
     .logo-circle::after {
         content: "";
         position: absolute;
-        width: 100%;
-        height: 100%;
+        top: 0; left: 0; width: 100%; height: 100%;
         border-radius: 50%;
         border: 2px solid #7000ff;
         animation: pulse 2s infinite;
     }
-
     @keyframes pulse {
         0% { transform: scale(1); opacity: 1;}
-        100% { transform: scale(1.3); opacity: 0;}
+        100% { transform: scale(1.4); opacity: 0;}
     }
 
-    /* SLOGAN */
-    .slogan {
-        font-size: 34px;
-        font-weight: 700;
-        text-align: center;
-        background: linear-gradient(90deg,#00f2ff,#7000ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 25px rgba(0,242,255,0.8);
-        margin-top: 20px;
-    }
-
-    .hero {
-        text-align:center;
-        margin-top:10px;
-        color:#FFFFFF;
-    }
-
-    /* GLASS CARD */
-    .glass {
-        background: rgba(255,255,255,0.06);
-        border-radius: 18px;
-        padding: 28px;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 0 25px rgba(0,242,255,0.2);
-        margin-bottom: 24px;
+    /* Chữ nổi bật trên nền tối */
+    h1, h2, h3, .slogan {
+        font-family: 'Orbitron', sans-serif;
         color: #FFFFFF !important;
-        font-weight: 500;
-        text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        transition: all 0.3s ease;
+        text-shadow: 0 0 15px rgba(0, 242, 255, 0.8);
+        text-align: center;
     }
 
+    /* Glass Card Premium v3.2 */
+    .glass {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: 0.4s ease;
+        backdrop-filter: blur(12px);
+        color: #FFFFFF !important;
+    }
     .glass:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0 40px rgba(0,242,255,0.6);
+        transform: translateY(-8px);
+        box-shadow: 0 10px 30px rgba(0, 242, 255, 0.3);
     }
 
-    /* MANIFESTO */
-    .manifesto {
+    /* Tuyên ngôn vinh quang */
+    .manifesto-box {
         font-family: 'Playfair Display', serif;
         border: 2px solid gold;
-        box-shadow: 0 0 35px rgba(255,215,0,0.7);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        background: rgba(255, 215, 0, 0.05);
     }
 
-    /* SLIDER */
+    /* Slider styling v3.2 */
     .stSlider label {
-        font-size: 18px !important;
+        font-family: 'Orbitron', sans-serif;
         color: #00f2ff !important;
+        font-size: 18px !important;
         font-weight: 700;
     }
-
-    div[data-baseweb="slider"] span {
-        background: linear-gradient(90deg,#7000ff,#00f2ff) !important;
-    }
-
-    div[data-baseweb="slider"] div[role="slider"] {
-        background: #00f2ff !important;
-        border: 2px solid white !important;
-    }
-
-    /* BUTTON */
+    
+    /* Button Premium */
     div.stButton > button {
-        border-radius: 16px !important;
-        background: linear-gradient(90deg,#7000ff,#00f2ff);
-        color: white;
-        font-weight: 600;
-        padding: 12px 24px;
-        box-shadow: 0 0 30px #00f2ff;
-        transition: 0.3s;
-    }
-
-    div.stButton > button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 50px #00f2ff;
-    }
-
-    /* RADAR LOADER */
-    .radar-loader {
-        border: 3px solid rgba(255,255,255,0.1);
-        border-top: 3px solid #00f2ff;
-        border-radius: 50%;
-        width: 70px;
-        height: 70px;
-        animation: spin 1s linear infinite;
-        margin: auto;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg);}
-        100% { transform: rotate(360deg);}
+        border-radius: 30px !important;
+        background: linear-gradient(90deg, #7000ff, #00f2ff) !important;
+        color: white !important;
+        font-weight: bold;
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
     }
 
     </style>
     """, unsafe_allow_html=True)
-
-    # Generate shooting stars
-    for i in range(4):
-        st.markdown(
-            f'<div class="shooting-star" style="top:{random.randint(0,300)}px; right:{random.randint(0,600)}px;"></div>',
-            unsafe_allow_html=True
-        )
+    
+    for i in range(5):
+        st.markdown(f'<div class="shooting-star" style="left:{random.randint(0,90)}%; animation-delay:{random.random()*5}s"></div>', unsafe_allow_html=True)
 
 # ==========================================================
-# RADAR CHART
+# CONTENT ENGINE (DIVERSIFIED ANALYSIS)
 # ==========================================================
 
-def render_radar(skills):
-    categories = list(skills.keys())
-    values = list(skills.values())
-    values += values[:1]
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatterpolar(
-        r=values,
-        theta=categories + categories[:1],
-        fill='toself',
-        fillcolor='rgba(0,242,255,0.35)',
-        line_color='#00f2ff'
-    ))
-
-    fig.update_layout(
-        polar=dict(radialaxis=dict(visible=True, range=[0,5],
-                                   gridcolor="rgba(200,200,200,0.3)")),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)"
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
+def get_deep_analysis(skill, score):
+    banks = {
+        1: [f"Năng lực {skill} hiện tại là vùng tiềm năng sơ khai, cần một chiến lược tái cấu trúc tư duy toàn diện.", 
+            f"Mức điểm này cho thấy {skill} đang ngủ yên, đòi hỏi sự đầu tư rèn luyện kỷ luật để đánh thức bản sắc."],
+        2: [f"Kỹ năng {skill} đang trong giai đoạn hình thành, cần được cọ xát qua các dự án thực tế để tăng độ nhạy bén.",
+            f"Nền tảng về {skill} của bạn đã có, nhưng thiếu sự ổn định để trở thành một vũ khí chiến lược."],
+        3: [f"Năng lực {skill} đang ở ngưỡng cân bằng tuyệt vời, sẵn sàng bứt phá trở thành điểm nhấn trong hồ sơ cá nhân.",
+            f"Vận hành ổn định ở mức {score}/5, {skill} là bệ phóng an toàn cho các quyết định nghề nghiệp của bạn."],
+        4: [f"Thế mạnh {skill} của bạn cực kỳ sắc sảo, đủ khả năng dẫn dắt và tạo ra tầm ảnh hưởng trong môi trường chuyên nghiệp.",
+            f"Đây là năng lực mũi nhọn, giúp bạn tạo ra lợi thế cạnh tranh khác biệt so với số đông."],
+        5: [f"Đỉnh cao {skill} cho thấy bạn tiệm cận mức độ chuyên gia, có khả năng kiến tạo những giá trị mang tính định danh.",
+            f"Sự xuất sắc ở {skill} chính là trục chiến lược để bạn xây dựng thương hiệu cá nhân bền vững."]
+    }
+    return random.choice(banks[score])
 
 # ==========================================================
-# MAIN
+# MAIN APP
 # ==========================================================
 
 def main():
     initialize_state()
     setup_ui()
 
-    # ================= HOME =================
-    if st.session_state.page == "home":
-
-        st.markdown('<div class="logo-circle"></div>', unsafe_allow_html=True)
-        st.markdown('<div class="slogan">Futurio - See Your Future. Shape Your Path.</div>', unsafe_allow_html=True)
-        st.markdown('<div class="hero">Khám phá tinh cầu năng lực của bạn thông qua thuật toán AI mô phỏng.</div>', unsafe_allow_html=True)
-
-        st.image("https://upload.wikimedia.org/wikipedia/commons/3/3b/Flowchart_example.svg", use_column_width=True)
-
-        with st.expander("📖 Hướng dẫn khai phá"):
-            st.write("1️⃣ Chấm điểm năng lực qua Slider.")
-            st.write("2️⃣ Nhấn AI Quét để kích hoạt mô phỏng.")
-            st.write("3️⃣ Xem biểu đồ, phân tích và tuyên ngôn.")
-
-        if st.button("🚀 Bắt đầu hành trình"):
-            st.session_state.page = "assessment"
-            st.rerun()
-
-    # ================= ASSESSMENT =================
-    elif st.session_state.page == "assessment":
-
-        if st.button("⬅ Quay lại trang chủ"):
+    # --- NAVBAR (Thanh điều hướng trên cùng) ---
+    st.markdown('<div class="nav-bar">', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns([1, 1, 1, 1])
+    with c1:
+        if st.button("🏠 Trang chủ", key="nav_home"):
             st.session_state.page = "home"
             st.session_state.analysis_done = False
             st.rerun()
+    with c2:
+        with st.popover("🌟 Tính năng & Lợi ích"):
+            st.markdown("""
+            **Hệ thống Futurio giúp bạn:**
+            * Phân tích đa chiều 5 trục năng lực cốt lõi.
+            * Nhận diện 'Điểm mù' và 'Điểm sáng' trong sự nghiệp.
+            * Tối ưu hóa lộ trình phát triển cá nhân dựa trên AI.
+            """)
+    with c3:
+        with st.popover("📖 Hướng dẫn"):
+            st.markdown("""
+            1. **Đánh giá:** Di chuyển Slider theo cảm nhận thực tế về bản thân.
+            2. **Phân tích:** Nhấn nút 'AI Quét' để hệ thống xử lý dữ liệu.
+            3. **Ứng dụng:** Đọc kỹ Tuyên ngôn sứ mệnh để định hướng hành động.
+            """)
+    with c4:
+        st.markdown('<div class="logo-circle"></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        skills = {
-            "🧠 Logic": st.slider("Logic",0,5,3),
-            "🎨 Sáng tạo": st.slider("Sáng tạo",0,5,3),
-            "📊 Phân tích": st.slider("Phân tích",0,5,3),
-            "📢 Giao tiếp": st.slider("Giao tiếp",0,5,3),
-            "📁 Quản lý": st.slider("Quản lý",0,5,3)
-        }
+    # --- PAGES ---
+    if st.session_state.page == "home":
+        st.markdown('<h1 style="margin-top: 50px;">FUTURIO</h1>', unsafe_allow_html=True)
+        st.markdown('<div class="slogan">See Your Future. Shape Your Path.</div>', unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("""
+        <div class="glass" style="text-align: center; max-width: 800px; margin: auto;">
+            <h3>Khám phá tinh cầu năng lực của bạn</h3>
+            <p style="opacity: 0.9;">Sử dụng thuật toán mô phỏng để đo lường và định hướng tương lai chuyên nghiệp.</p>
+            <hr style="border-color: rgba(255,255,255,0.1)">
+            <div style="display: flex; justify-content: space-around; font-size: 14px;">
+                <div><b>TỪ: Mơ hồ</b></div>
+                <div><b>➔</b></div>
+                <div><b>ĐẾN: Chiến lược</b></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        col_btn, _ = st.columns([1, 2])
+        with col_btn:
+            if st.button("🚀 BẮT ĐẦU HÀNH TRÌNH"):
+                st.session_state.page = "assessment"
+                st.rerun()
 
-        if st.button("AI Quét Năng Lực"):
-            loader = st.empty()
-            loader.markdown('<div class="radar-loader"></div>', unsafe_allow_html=True)
-            time.sleep(2)
-            loader.empty()
-
-            st.session_state.analysis_done = True
+    elif st.session_state.page == "assessment":
+        st.markdown("<h2>🌌 ĐÁNH GIÁ NĂNG LỰC</h2>", unsafe_allow_html=True)
+        
+        # Sắp xếp Slider trong các thẻ Glass
+        skills = {}
+        col_left, col_right = st.columns(2)
+        
+        with col_left:
+            for s in ["🧠 Logic", "🎨 Sáng tạo", "📊 Phân tích"]:
+                st.markdown('<div class="glass">', unsafe_allow_html=True)
+                skills[s] = st.slider(s, 1, 5, 3)
+                st.markdown('</div>', unsafe_allow_html=True)
+        with col_right:
+            for s in ["📢 Giao tiếp", "📁 Quản lý"]:
+                st.markdown('<div class="glass">', unsafe_allow_html=True)
+                skills[s] = st.slider(s, 1, 5, 3)
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+        if st.button("AI QUÉT NĂNG LỰC"):
+            placeholder = st.empty()
+            placeholder.markdown('<div class="glass" style="text-align:center;">🔄 <b>AI ĐANG MÔ PHỎNG DỮ LIỆU TƯƠNG LAI...</b></div>', unsafe_allow_html=True)
+            time.sleep(1.5)
+            placeholder.empty()
+            
             st.session_state.skills = skills
-            dominant = max(skills, key=skills.get)
+            st.session_state.analysis_done = True
+            
+            hi = max(skills, key=skills.get)
+            lo = min(skills, key=skills.get)
             st.session_state.manifesto = f"""
-            Bạn được thiết kế để dẫn dắt bằng {dominant}.
-            Khi khai thác tối đa năng lực này, bạn có thể tạo ra lợi thế chiến lược dài hạn.
-            Tương lai thuộc về những người hiểu rõ chính mình.
+            Sứ mệnh của bạn là sử dụng sự đột phá của {hi} làm mũi nhọn tấn công, 
+            đồng thời tinh chỉnh {lo} để tạo ra thế cân bằng chiến lược bền vững. 
+            Tương lai thuộc về người biết dùng ưu điểm để làm chủ nghịch cảnh.
             """
 
         if st.session_state.analysis_done:
-
-            tab1, tab2, tab3 = st.tabs(["📊 Biểu đồ", "🔮 Phân tích chi tiết", "📜 Tuyên ngôn"])
-
+            tab1, tab2, tab3 = st.tabs(["📊 BIỂU ĐỒ", "🔮 PHÂN TÍCH", "📜 TUYÊN NGÔN"])
+            
             with tab1:
-                render_radar(st.session_state.skills)
+                labels = list(st.session_state.skills.keys())
+                values = list(st.session_state.skills.values())
+                values += [values[0]]
+                fig = go.Figure(go.Scatterpolar(
+                    r=values,
+                    theta=labels + [labels[0]],
+                    fill='toself',
+                    fillcolor='rgba(0, 242, 255, 0.25)',
+                    line_color='#00f2ff'
+                ))
+                fig.update_layout(
+                    polar=dict(radialaxis=dict(visible=True, range=[0, 5], gridcolor="rgba(255,255,255,0.1)")),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    font_color="white",
+                    margin=dict(t=30, b=30)
+                )
+                st.plotly_chart(fig, use_container_width=True)
+                
 
             with tab2:
-                for k,v in st.session_state.skills.items():
-                    st.markdown(f'<div class="glass"><b>{k}</b> đạt {v}/5. Đây là yếu tố quan trọng ảnh hưởng đến chiến lược phát triển của bạn. Khi nâng cấp kỹ năng này, bạn sẽ mở rộng đáng kể cơ hội trong tương lai.</div>', unsafe_allow_html=True)
+                for k, v in st.session_state.skills.items():
+                    st.markdown(f'<div class="glass">{get_deep_analysis(k, v)}</div>', unsafe_allow_html=True)
 
             with tab3:
-                st.markdown(f'<div class="glass manifesto">{st.session_state.manifesto}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="glass manifesto-box">{st.session_state.manifesto}</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
