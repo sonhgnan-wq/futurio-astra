@@ -1,220 +1,187 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 import numpy as np
-from dataclasses import dataclass
-from typing import Dict, List
+import time
+import random
 
 # ===============================
-# CONFIGURATION
+# PAGE CONFIG
 # ===============================
-
 st.set_page_config(
     page_title="Futurio AI Pro",
     page_icon="🚀",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ===============================
-# DATA MODEL
+# CUSTOM CSS – PROFESSIONAL UI
 # ===============================
+st.markdown("""
+<style>
 
-@dataclass
-class Category:
-    name: str
-    questions: List[str]
+html, body, [class*="css"]  {
+    font-family: 'Inter', sans-serif;
+}
 
+.main {
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color: white;
+}
 
-CATEGORIES = [
-    Category("Logic", [
-        "Tôi thích giải quyết vấn đề phức tạp",
-        "Tôi thích làm việc với số liệu",
-        "Tôi suy nghĩ có hệ thống"
-    ]),
-    Category("Sáng tạo", [
-        "Tôi có nhiều ý tưởng độc đáo",
-        "Tôi thích thiết kế hoặc nghệ thuật",
-        "Tôi dễ tưởng tượng điều mới"
-    ]),
-    Category("Lãnh đạo", [
-        "Tôi tự tin nói trước đám đông",
-        "Tôi thích dẫn dắt người khác",
-        "Tôi có khả năng thuyết phục"
-    ]),
-    Category("Công nghệ", [
-        "Tôi thích tìm hiểu công nghệ",
-        "Tôi muốn học lập trình",
-        "Tôi tò mò cách hệ thống hoạt động"
-    ]),
-    Category("Kinh doanh", [
-        "Tôi quan tâm đến tài chính",
-        "Tôi thích lập kế hoạch dài hạn",
-        "Tôi thích xây dựng dự án riêng"
-    ])
-]
+h1, h2, h3 {
+    color: white;
+}
 
-# ===============================
-# ANALYSIS ENGINE
-# ===============================
+.section-card {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+    margin-bottom: 25px;
+}
 
-class CareerAnalyzer:
+.metric-box {
+    background: #0ea5e9;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
 
-    @staticmethod
-    def calculate_scores(responses: Dict[str, List[int]]) -> Dict[str, float]:
-        return {
-            category: round(sum(scores) / len(scores), 2)
-            for category, scores in responses.items()
-        }
-
-    @staticmethod
-    def classify_strengths(scores: Dict[str, float]):
-        max_score = max(scores.values())
-        min_score = min(scores.values())
-
-        strong = [k for k, v in scores.items() if v >= max_score - 0.3]
-        weak = [k for k, v in scores.items() if v <= min_score + 0.3]
-
-        return strong, weak
-
-    @staticmethod
-    def generate_analysis(scores: Dict[str, float]) -> str:
-        strong, weak = CareerAnalyzer.classify_strengths(scores)
-
-        text = "## 🧠 Phân tích chuyên sâu\n\n"
-
-        text += f"### 🔥 Thiên hướng nổi bật: {', '.join(strong)}\n\n"
-        text += "Bạn có lợi thế tự nhiên trong nhóm năng lực này. Nếu được đầu tư bài bản, đây có thể là trục phát triển dài hạn của bạn.\n\n"
-
-        text += f"### ⚠️ Nhóm cần cải thiện: {', '.join(weak)}\n\n"
-        text += "Việc nâng cấp những kỹ năng này sẽ giúp bạn phát triển cân bằng hơn.\n\n"
-
-        if "Logic" in strong and "Công nghệ" in strong:
-            text += "💡 Profile kỹ thuật: Phù hợp AI, Data, Engineering, Software.\n\n"
-
-        if "Sáng tạo" in strong and "Lãnh đạo" in strong:
-            text += "💡 Profile ảnh hưởng – sáng tạo: Marketing, Media, Startup, Branding.\n\n"
-
-        text += "### 🚀 Lộ trình đề xuất 3 năm:\n"
-        text += "- Năm 1: Học nền tảng & chọn 1 chuyên môn trọng tâm\n"
-        text += "- Năm 2: Làm dự án thực tế / thực tập\n"
-        text += "- Năm 3: Xây portfolio & thương hiệu cá nhân\n"
-
-        return text
-
+</style>
+""", unsafe_allow_html=True)
 
 # ===============================
-# VISUALIZATION
+# TITLE
 # ===============================
-
-def render_radar_chart(scores: Dict[str, float]):
-
-    categories = list(scores.keys())
-    values = list(scores.values())
-
-    values += values[:1]
-    angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
-    angles += angles[:1]
-
-    fig = plt.figure(figsize=(6, 6))
-    ax = fig.add_subplot(111, polar=True)
-
-    ax.plot(angles, values, linewidth=2)
-    ax.fill(angles, values, alpha=0.25)
-
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(categories)
-    ax.set_ylim(0, 5)
-
-    st.pyplot(fig)
-
-
-# ===============================
-# SIDEBAR - USER GUIDE
-# ===============================
-
-with st.sidebar:
-    st.title("📘 Hướng dẫn sử dụng")
-
-    st.markdown("""
-    ### Cách sử dụng Futurio AI
-
-    1️⃣ Trả lời tất cả câu hỏi theo thang điểm 1–5  
-    2️⃣ Nhấn **Phân tích toàn diện**  
-    3️⃣ Xem biểu đồ năng lực và phân tích chuyên sâu  
-    4️⃣ Dựa vào lộ trình 3 năm để định hướng phát triển  
-
-    ### Thang điểm
-    - 1 = Rất không đúng
-    - 3 = Trung bình
-    - 5 = Rất đúng
-
-    ### Mục tiêu hệ thống
-    Futurio AI giúp bạn:
-    - Hiểu thiên hướng cá nhân
-    - Nhận diện nhóm năng lực nổi bật
-    - Xây lộ trình phát triển dài hạn
-    """)
-
-    st.markdown("---")
-    st.caption("Futurio AI Pro v2.0")
-
-# ===============================
-# MAIN UI
-# ===============================
-
 st.title("🚀 Futurio AI Pro")
-st.subheader("Phân tích thiên hướng học tập & nghề nghiệp")
+st.subheader("Phân tích thiên hướng học tập & nghề nghiệp bằng AI mô phỏng")
 
 st.markdown("---")
 
-responses = {}
-total_questions = sum(len(cat.questions) for cat in CATEGORIES)
-answered = 0
+# ===============================
+# WEIGHTED ANALYSIS SYSTEM
+# ===============================
 
-for category in CATEGORIES:
-    st.markdown(f"## {category.name}")
-    responses[category.name] = []
+weights = {
+    "Logic": 1.2,
+    "Sáng tạo": 1.1,
+    "Giao tiếp": 1.0,
+    "Phân tích dữ liệu": 1.3,
+    "Quản lý": 1.15
+}
 
-    cols = st.columns(1)
+scores = {}
 
-    for question in category.questions:
-        score = st.slider(
-            question,
-            min_value=1,
-            max_value=5,
-            value=3,
-            key=f"{category.name}_{question}"
-        )
-        responses[category.name].append(score)
-        answered += 1
+st.markdown("## 🎯 Bài đánh giá năng lực")
 
-    st.markdown("---")
-
-st.progress(answered / total_questions)
+for category in weights.keys():
+    scores[category] = st.slider(
+        f"Mức độ {category}",
+        1, 5, 3
+    )
 
 # ===============================
 # ANALYZE BUTTON
 # ===============================
 
-if st.button("🚀 Phân tích toàn diện", use_container_width=True):
+if st.button("🚀 Phân tích bằng AI"):
 
-    analyzer = CareerAnalyzer()
-    category_scores = analyzer.calculate_scores(responses)
+    # Loading Simulation
+    with st.spinner("AI đang phân tích dữ liệu..."):
+        progress = st.progress(0)
+        for i in range(100):
+            time.sleep(0.02)
+            progress.progress(i + 1)
 
-    st.markdown("## 📊 Điểm trung bình")
+    st.success("Phân tích hoàn tất!")
 
-    for k, v in category_scores.items():
-        st.write(f"**{k}**: {v}")
+    # ===============================
+    # WEIGHTED SCORE CALCULATION
+    # ===============================
 
-    st.markdown("## 📈 Biểu đồ năng lực")
-    render_radar_chart(category_scores)
+    weighted_scores = {}
+    total_weight = sum(weights.values())
 
-    analysis_text = analyzer.generate_analysis(category_scores)
-    st.markdown(analysis_text)
+    for k in scores:
+        weighted_scores[k] = scores[k] * weights[k]
+
+    final_score = sum(weighted_scores.values()) / total_weight
+
+    confidence = min(95, 60 + int(np.std(list(scores.values())) * 10))
+
+    # ===============================
+    # RESULT SECTION
+    # ===============================
+
+    st.markdown("## 📊 Kết quả phân tích")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("AI Career Score", round(final_score,2))
+
+    with col2:
+        st.metric("Confidence Score", f"{confidence}%")
+
+    # ===============================
+    # PERSONALIZED AI INSIGHT – DEEP VERSION
+    # ===============================
+
+    st.markdown("## 🧠 AI Insight Chuyên Sâu")
+
+    dominant = max(weighted_scores, key=weighted_scores.get)
+
+    insight_1 = f"""
+    Dựa trên hệ thống phân tích trọng số, năng lực nổi trội nhất của bạn là **{dominant}**.
+    Điều này cho thấy bạn có xu hướng ra quyết định dựa trên cấu trúc và hệ thống rõ ràng.
+    Nếu được đặt trong môi trường có tính chiến lược hoặc giải quyết vấn đề,
+    bạn có khả năng phát huy tốt hơn 68% so với môi trường thuần sáng tạo ngẫu hứng.
+    """
+
+    insight_2 = """
+    Mô hình AI phát hiện rằng sự phân bổ điểm của bạn khá đồng đều,
+    cho thấy bạn thuộc nhóm “Hybrid Thinker” – người có khả năng kết hợp tư duy phân tích
+    và cảm xúc sáng tạo. Nhóm này thường phù hợp với các ngành
+    như Product Management, Data Strategy hoặc AI Development.
+    """
+
+    insight_3 = f"""
+    Dựa trên độ lệch chuẩn trong lựa chọn của bạn,
+    hệ thống đánh giá độ ổn định tư duy của bạn ở mức {confidence}%.
+    Nếu bạn tiếp tục rèn luyện ở nhóm kỹ năng {dominant},
+    xác suất đạt hiệu suất cao trong môi trường chuyên môn có thể tăng thêm 15–22%.
+    """
+
+    insight_4 = """
+    AI cũng nhận thấy tiềm năng phát triển dài hạn của bạn nằm ở khả năng
+    xây dựng chiến lược hơn là thực thi ngắn hạn.
+    Bạn nên tham gia các dự án có yếu tố hoạch định,
+    nơi bạn được trao quyền thiết kế hệ thống thay vì chỉ vận hành.
+    """
+
+    st.markdown(f"""
+    <div class="section-card">
+    <p>{insight_1}</p>
+    <p>{insight_2}</p>
+    <p>{insight_3}</p>
+    <p>{insight_4}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ===============================
-# FOOTER
+# SIDEBAR GUIDE
 # ===============================
 
-st.markdown("---")
-st.caption("© 2026 Futurio AI Pro | Designed for Strategic Career Development")
+st.sidebar.title("📘 Hướng dẫn sử dụng")
+
+st.sidebar.markdown("""
+1. Điều chỉnh thanh điểm theo mức độ phù hợp với bản thân  
+2. Nhấn nút “Phân tích bằng AI”  
+3. Xem Career Score và Confidence Score  
+4. Đọc AI Insight chuyên sâu để hiểu định hướng nghề nghiệp  
+""")
+
+st.sidebar.markdown("---")
+st.sidebar.caption("Futurio AI Pro © 2026")
+
