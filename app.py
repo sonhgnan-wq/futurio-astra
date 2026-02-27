@@ -1,5 +1,5 @@
 # ==========================================================
-# FUTURIO v3.9 – SYNCHRONIZED DESIGN EDITION
+# FUTURIO v3.9 – THE FINAL MASTER EDITION
 # ==========================================================
 
 import streamlit as st
@@ -17,7 +17,7 @@ if "page" not in st.session_state: st.session_state.page = "home"
 if "analysis_done" not in st.session_state: st.session_state.analysis_done = False
 
 # ==========================================================
-# UI SYSTEM (MAX CONTRAST & UNIFIED DESIGN)
+# UI SYSTEM (RADIAL BACKGROUND & SYNCED DESIGN)
 # ==========================================================
 
 def setup_ui():
@@ -25,25 +25,37 @@ def setup_ui():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@1,600&display=swap');
 
-    /* Nền và màu chữ cơ bản */
+    /* NỀN RADIAL GRADIENT ĐẶC TRƯNG */
     .stApp {
         background: radial-gradient(circle at center, #0f172a, #020617);
         color: #FFFFFF !important;
     }
 
+    /* SAO RƠI */
+    .shooting-star {
+        position: fixed; width: 2px; height: 60px;
+        background: linear-gradient(to bottom, #00f2ff, transparent);
+        animation: shoot 5s linear infinite; opacity: 0.2; z-index: 0;
+    }
+    @keyframes shoot {
+        0% { transform: translateY(-100px) translateX(0); opacity: 1; }
+        100% { transform: translateY(100vh) translateX(200px); opacity: 0; }
+    }
+
     /* CHỮ FUTURIO SIÊU TO */
     .main-title {
         font-family: 'Orbitron', sans-serif;
-        font-size: 80px !important;
+        font-size: 85px !important;
         font-weight: 900;
         color: #FFFFFF !important;
-        text-shadow: 0 0 25px #00f2ff;
+        text-shadow: 0 0 30px #00f2ff;
         text-align: center;
+        margin-top: 10px;
         margin-bottom: 0px;
+        letter-spacing: 5px;
     }
 
-    /* ĐỒNG BỘ MÀU NÚT & POPOVER */
-    /* Nút trong Popover */
+    /* NAVBAR & POPOVER (ĐỒNG BỘ MÀU) */
     div[data-testid="stPopover"] > button {
         background: linear-gradient(90deg, #7000ff, #00f2ff) !important;
         color: white !important;
@@ -53,14 +65,12 @@ def setup_ui():
         box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
     }
 
-    /* Nội dung bên trong Popover */
     div[data-testid="stPopoverBody"] {
         background-color: #0f172a !important;
         border: 1px solid #00f2ff !important;
         box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
     }
     
-    /* Ép màu chữ trắng trong Popover */
     div[data-testid="stPopoverBody"] p, 
     div[data-testid="stPopoverBody"] li, 
     div[data-testid="stPopoverBody"] strong,
@@ -73,7 +83,7 @@ def setup_ui():
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 15px;
-        padding: 15px 25px;
+        padding: 18px 25px;
         margin-bottom: 15px;
         color: #FFFFFF !important;
         backdrop-filter: blur(10px);
@@ -86,23 +96,28 @@ def setup_ui():
         font-weight: bold;
         border-radius: 25px;
         padding: 10px 40px !important;
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
     }
 
+    /* TUYÊN NGÔN */
     .manifesto-box {
         font-family: 'Playfair Display', serif;
         border: 1px solid #FFD700;
         background: rgba(255, 215, 0, 0.05);
-        padding: 20px;
+        padding: 25px;
         font-size: 1.2rem;
         text-align: center;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
     }
 
     .stSlider label { color: #00f2ff !important; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
+    for i in range(3):
+        st.markdown(f'<div class="shooting-star" style="left:{random.randint(0,95)}%; animation-delay:{random.random()*5}s"></div>', unsafe_allow_html=True)
 
 # ==========================================================
-# ANALYSIS & MANIFESTO ENGINE (RETAINED)
+# ANALYSIS & MANIFESTO ENGINE (FULL)
 # ==========================================================
 
 def get_deep_analysis(skill, score):
@@ -126,39 +141,25 @@ def get_deep_analysis(skill, score):
 
 setup_ui()
 
-# --- NAVBAR SIÊU GỌN ---
-st.markdown('<div style="background: rgba(255,255,255,0.05); border-bottom: 1px solid #00f2ff; padding: 5px 0; margin-bottom: 15px;">', unsafe_allow_html=True)
+# --- NAVBAR GỌN GÀNG ---
+st.markdown('<div style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(0, 242, 255, 0.3); padding: 5px 0; margin-bottom: 15px;">', unsafe_allow_html=True)
 nav_cols = st.columns([1, 1, 1, 1])
 with nav_cols[0]:
     if st.button("🏠 Trang chủ", use_container_width=True):
         st.session_state.page = "home"
         st.session_state.analysis_done = False
         st.rerun()
-
 with nav_cols[1]:
     with st.popover("🌟 Lợi ích", use_container_width=True):
-        st.markdown("""
-        ### Lợi ích chiến lược
-        * **Định vị chính xác:** Khám phá trục năng lực cốt lõi thông qua thuật toán AI.
-        * **Tối ưu lộ trình:** Tập trung nguồn lực vào những kỹ năng mang lại giá trị cao nhất.
-        * **Nhận diện điểm yếu:** Cảnh báo sớm các 'điểm mù' trong kỹ năng chuyên môn.
-        * **Thương hiệu cá nhân:** Xây dựng bản sắc dựa trên những chỉ số vượt trội.
-        """)
-
+        st.markdown("### Lợi ích chiến lược\n* **Định vị chính xác:** Khám phá trục năng lực cốt lõi.\n* **Tối ưu lộ trình:** Tập trung vào kỹ năng giá trị cao.\n* **Nhận diện điểm mù:** Cảnh báo sớm các thiếu hụt.\n* **Bản sắc cá nhân:** Xây dựng thương hiệu khác biệt.")
 with nav_cols[2]:
     with st.popover("📖 Hướng dẫn", use_container_width=True):
-        st.markdown("""
-        ### 3 Bước khai phá
-        1. **Đánh giá:** Điều chỉnh Slider (1-5) cho từng nhóm kỹ năng.
-        2. **Kích hoạt:** Nhấn 'AI Quét Năng Lực' để hệ thống tính toán.
-        3. **Phân tích:** Xem biểu đồ Radar, đọc phân tích và nhận Tuyên ngôn.
-        """)
-
+        st.markdown("### 3 Bước khai phá\n1. **Đánh giá:** Kéo Slider cho 5 nhóm năng lực.\n2. **Kích hoạt:** Nhấn 'AI Quét Năng Lực'.\n3. **Khám phá:** Xem Biểu đồ, Phân tích & Tuyên ngôn.")
 with nav_cols[3]:
-    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:8px; padding-right:15px;">v3.9 PRO</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:8px; padding-right:15px;">v3.9 FINAL</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TRANG CHỦ (GỌN GÀNG) ---
+# --- HOME ---
 if st.session_state.page == "home":
     st.markdown('<div class="main-title">FUTURIO</div>', unsafe_allow_html=True)
     st.markdown("<h3 style='text-align:center; margin-top:-10px; opacity:0.8;'>See Your Future. Shape Your Path.</h3>", unsafe_allow_html=True)
@@ -177,7 +178,7 @@ if st.session_state.page == "home":
             st.session_state.page = "assessment"
             st.rerun()
 
-# --- TRANG ĐÁNH GIÁ (GIỮ NGUYÊN BỐ CỤC) ---
+# --- ASSESSMENT ---
 elif st.session_state.page == "assessment":
     st.markdown("<h2 style='text-align:center;'>🌌 ĐÁNH GIÁ NĂNG LỰC</h2>", unsafe_allow_html=True)
     
