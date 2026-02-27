@@ -1,6 +1,4 @@
 streamlit
-pandas
-requests
-openai
 numpy
-matplotlib
+time
+random
