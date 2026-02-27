@@ -1,5 +1,5 @@
 # ==========================================================
-# FUTURIO v3.8.1 – FINAL CONTENT & COLOR FIX
+# FUTURIO v3.9 – SYNCHRONIZED DESIGN EDITION
 # ==========================================================
 
 import streamlit as st
@@ -17,7 +17,7 @@ if "page" not in st.session_state: st.session_state.page = "home"
 if "analysis_done" not in st.session_state: st.session_state.analysis_done = False
 
 # ==========================================================
-# UI SYSTEM (MAX CONTRAST)
+# UI SYSTEM (MAX CONTRAST & UNIFIED DESIGN)
 # ==========================================================
 
 def setup_ui():
@@ -25,47 +25,50 @@ def setup_ui():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@1,600&display=swap');
 
+    /* Nền và màu chữ cơ bản */
     .stApp {
         background: radial-gradient(circle at center, #0f172a, #020617);
         color: #FFFFFF !important;
     }
 
-    /* NAVBAR GỌN */
-    .nav-bar {
-        background: rgba(255, 255, 255, 0.05);
-        border-bottom: 1px solid rgba(0, 242, 255, 0.3);
-        padding: 5px 0;
-        margin-bottom: 10px;
-    }
-
-    /* FIX LỖI MÀU TRONG POPOVER (LỢI ÍCH & HƯỚNG DẪN) */
-    div[data-testid="stPopoverBody"] {
-        background-color: #020617 !important;
-        border: 1px solid #00f2ff !important;
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-        padding: 20px !important;
-    }
-    div[data-testid="stPopoverBody"] p, 
-    div[data-testid="stPopoverBody"] span, 
-    div[data-testid="stPopoverBody"] li,
-    div[data-testid="stPopoverBody"] strong {
-        color: #FFFFFF !important;
-        font-family: 'sans-serif';
-        line-height: 1.6;
-    }
-
-    /* CHỮ FUTURIO */
+    /* CHỮ FUTURIO SIÊU TO */
     .main-title {
         font-family: 'Orbitron', sans-serif;
         font-size: 80px !important;
         font-weight: 900;
         color: #FFFFFF !important;
-        text-shadow: 0 0 20px #00f2ff;
+        text-shadow: 0 0 25px #00f2ff;
         text-align: center;
         margin-bottom: 0px;
     }
 
-    /* GLASS CARD */
+    /* ĐỒNG BỘ MÀU NÚT & POPOVER */
+    /* Nút trong Popover */
+    div[data-testid="stPopover"] > button {
+        background: linear-gradient(90deg, #7000ff, #00f2ff) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 20px !important;
+        font-weight: bold !important;
+        box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+    }
+
+    /* Nội dung bên trong Popover */
+    div[data-testid="stPopoverBody"] {
+        background-color: #0f172a !important;
+        border: 1px solid #00f2ff !important;
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+    }
+    
+    /* Ép màu chữ trắng trong Popover */
+    div[data-testid="stPopoverBody"] p, 
+    div[data-testid="stPopoverBody"] li, 
+    div[data-testid="stPopoverBody"] strong,
+    div[data-testid="stPopoverBody"] h3 {
+        color: #FFFFFF !important;
+    }
+
+    /* GLASS CARD V3.2 */
     .glass {
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -76,7 +79,7 @@ def setup_ui():
         backdrop-filter: blur(10px);
     }
 
-    /* NÚT BẮT ĐẦU */
+    /* NÚT BẮT ĐẦU VÀ NÚT QUÉT */
     div.stButton > button {
         background: linear-gradient(90deg, #7000ff, #00f2ff) !important;
         color: white !important;
@@ -90,6 +93,8 @@ def setup_ui():
         border: 1px solid #FFD700;
         background: rgba(255, 215, 0, 0.05);
         padding: 20px;
+        font-size: 1.2rem;
+        text-align: center;
     }
 
     .stSlider label { color: #00f2ff !important; font-weight: bold; }
@@ -97,21 +102,21 @@ def setup_ui():
     """, unsafe_allow_html=True)
 
 # ==========================================================
-# ANALYSIS ENGINE
+# ANALYSIS & MANIFESTO ENGINE (RETAINED)
 # ==========================================================
 
 def get_deep_analysis(skill, score):
     banks = {
-        1: [f"Kỹ năng {skill} đang ở mức nền tảng, cần đầu tư nghiêm túc để tái cấu trúc.",
-            f"Vùng {skill} hiện tại là 'điểm mù' cần được khai phá bằng các lộ trình học tập mới."],
-        2: [f"Năng lực {skill} đang phát triển nhưng chưa ổn định chiến lược.",
-            f"Bạn có dấu hiệu tiến bộ ở {skill}, nhưng cần môi trường thực hành khốc liệt hơn."],
-        3: [f"Năng lực {skill} đang ở ngưỡng ổn định, sẵn sàng bứt phá thành lợi thế cạnh tranh.",
-            f"Tại mức {score}/5, {skill} đóng vai trò là trụ cột giữ vững sự cân bằng trong hồ sơ năng lực."],
-        4: [f"Thế mạnh {skill} của bạn cực kỳ nổi bật, mang lại khả năng dẫn dắt và tầm ảnh hưởng.",
-            f"Đây là điểm sáng giúp bạn tạo ra sự khác biệt hoàn toàn so với các đối thủ khác."],
-        5: [f"Năng lực {skill} đạt cấp độ xuất sắc, tiệm cận chuyên gia và mang tính định danh cá nhân.",
-            f"Sự xuất sắc ở {skill} chính là 'thương hiệu' giúp bạn mở ra những cơ hội đỉnh cao."]
+        1: [f"Năng lực {skill} hiện chỉ là một đốm lửa nhỏ, cần sự đầu tư tái cấu trúc toàn diện để bắt kịp xu hướng.", 
+            f"Vùng {skill} đang ở trạng thái sơ khai, đòi hỏi một lộ trình rèn luyện kỷ luật và nghiêm túc."],
+        2: [f"Kỹ năng {skill} đã hình thành nhưng còn mỏng manh, cần thêm các dự án thực tế để rèn giũa bản lĩnh.",
+            f"Bạn có tiềm năng về {skill}, nhưng hiện tại nó vẫn chưa thực sự tạo ra sức bật lớn."],
+        3: [f"Năng lực {skill} đang vận hành ổn định, là bệ phóng sẵn sàng cho những cú hích chiến lược tiếp theo.",
+            f"Tại ngưỡng {score}/5, {skill} đóng vai trò là một điểm tựa vững chắc trong hồ sơ của bạn."],
+        4: [f"Thế mạnh {skill} của bạn cực kỳ ấn tượng, mang lại khả năng dẫn dắt và tầm ảnh hưởng sâu rộng.",
+            f"Bạn đang làm chủ {skill} một cách điêu luyện, đây là vũ khí quan trọng để bạn bứt phá."],
+        5: [f"Năng lực {skill} đã chạm ngưỡng bậc thầy, là biểu tượng cho thương hiệu cá nhân khác biệt của bạn.",
+            f"Đỉnh cao {skill} cho phép bạn kiến tạo những giá trị mà số đông không thể thực hiện được."]
     }
     return random.choice(banks[score])
 
@@ -122,60 +127,57 @@ def get_deep_analysis(skill, score):
 setup_ui()
 
 # --- NAVBAR SIÊU GỌN ---
-st.markdown('<div class="nav-bar">', unsafe_allow_html=True)
+st.markdown('<div style="background: rgba(255,255,255,0.05); border-bottom: 1px solid #00f2ff; padding: 5px 0; margin-bottom: 15px;">', unsafe_allow_html=True)
 nav_cols = st.columns([1, 1, 1, 1])
 with nav_cols[0]:
-    if st.button("🏠 Trang chủ", key="nav_home", use_container_width=True):
+    if st.button("🏠 Trang chủ", use_container_width=True):
         st.session_state.page = "home"
         st.session_state.analysis_done = False
         st.rerun()
 
 with nav_cols[1]:
-    with st.popover("🌟 Lợi ích chi tiết", use_container_width=True):
+    with st.popover("🌟 Lợi ích", use_container_width=True):
         st.markdown("""
-        ### Tại sao chọn Futurio?
-        
-        * **Định vị bản sắc:** Xác định chính xác 5 trục năng lực cốt lõi thông qua thuật toán mô phỏng.
-        * **Phát hiện điểm mù:** AI chỉ ra những kỹ năng bạn đang bỏ lỡ để tránh rủi ro trong sự nghiệp.
-        * **Tối ưu lộ trình:** Tiết kiệm thời gian bằng cách tập trung vào kỹ năng 'mũi nhọn' thay vì dàn trải.
-        * **Tuyên ngôn sứ mệnh:** Nhận lời khuyên chiến lược được cá nhân hóa dựa trên sự kết hợp độc đáo của các chỉ số.
+        ### Lợi ích chiến lược
+        * **Định vị chính xác:** Khám phá trục năng lực cốt lõi thông qua thuật toán AI.
+        * **Tối ưu lộ trình:** Tập trung nguồn lực vào những kỹ năng mang lại giá trị cao nhất.
+        * **Nhận diện điểm yếu:** Cảnh báo sớm các 'điểm mù' trong kỹ năng chuyên môn.
+        * **Thương hiệu cá nhân:** Xây dựng bản sắc dựa trên những chỉ số vượt trội.
         """)
 
 with nav_cols[2]:
-    with st.popover("📖 Hướng dẫn khai phá", use_container_width=True):
+    with st.popover("📖 Hướng dẫn", use_container_width=True):
         st.markdown("""
-        ### Quy trình 3 bước:
-        
-        1.  **Bước 1 - Đánh giá:** Kéo các thanh trượt (Slider) để tự chấm điểm năng lực của bạn từ 1 đến 5. Hãy trung thực để có kết quả chính xác nhất.
-        2.  **Bước 2 - AI Quét:** Nhấn nút 'AI Quét Năng Lực' để hệ thống bắt đầu tính toán các kịch bản tương lai và vẽ biểu đồ Radar.
-        3.  **Bước 3 - Khám phá:** Chuyển đổi giữa các Tab để xem biểu đồ trực quan, đọc phân tích chuyên sâu cho từng kỹ năng và nhận Tuyên ngôn sứ mệnh của riêng bạn.
+        ### 3 Bước khai phá
+        1. **Đánh giá:** Điều chỉnh Slider (1-5) cho từng nhóm kỹ năng.
+        2. **Kích hoạt:** Nhấn 'AI Quét Năng Lực' để hệ thống tính toán.
+        3. **Phân tích:** Xem biểu đồ Radar, đọc phân tích và nhận Tuyên ngôn.
         """)
 
 with nav_cols[3]:
-    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:5px;">v3.8.1 PRO</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align:right; color:#00f2ff; font-weight:bold; padding-top:8px; padding-right:15px;">v3.9 PRO</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- HOME ---
+# --- TRANG CHỦ (GỌN GÀNG) ---
 if st.session_state.page == "home":
     st.markdown('<div class="main-title">FUTURIO</div>', unsafe_allow_html=True)
     st.markdown("<h3 style='text-align:center; margin-top:-10px; opacity:0.8;'>See Your Future. Shape Your Path.</h3>", unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
-    <div class="glass" style="text-align: center; max-width: 600px; margin: auto;">
-        <p style="font-size:1.1rem;">Chào mừng bạn đến với hệ thống mô phỏng năng lực AI. 
-        Hãy khám phá bản sắc chuyên nghiệp của mình ngay bây giờ.</p>
+    <div class="glass" style="text-align: center; max-width: 650px; margin: auto;">
+        <p style="font-size:1.15rem; font-weight:500;">Hệ thống mô phỏng năng lực AI giúp bạn định vị bản sắc và kiến tạo tương lai sự nghiệp.</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     _, btn_center, _ = st.columns([1.2, 1, 1.2])
     with btn_center:
-        if st.button("🚀 BẮT ĐẦU HÀNH TRÌNH", key="start_btn", use_container_width=True):
+        if st.button("🚀 BẮT ĐẦU HÀNH TRÌNH", use_container_width=True):
             st.session_state.page = "assessment"
             st.rerun()
 
-# --- ASSESSMENT ---
+# --- TRANG ĐÁNH GIÁ (GIỮ NGUYÊN BỐ CỤC) ---
 elif st.session_state.page == "assessment":
     st.markdown("<h2 style='text-align:center;'>🌌 ĐÁNH GIÁ NĂNG LỰC</h2>", unsafe_allow_html=True)
     
@@ -192,8 +194,8 @@ elif st.session_state.page == "assessment":
             skills[s] = st.slider(s, 1, 5, 3)
             st.markdown('</div>', unsafe_allow_html=True)
             
-    if st.button("AI QUÉT NĂNG LỰC", key="scan_btn"):
-        with st.spinner("AI đang xử lý tinh cầu năng lực..."):
+    if st.button("AI QUÉT NĂNG LỰC"):
+        with st.spinner("Đang mô phỏng tinh cầu năng lực..."):
             time.sleep(1.2)
         st.session_state.skills = skills
         st.session_state.analysis_done = True
@@ -201,7 +203,7 @@ elif st.session_state.page == "assessment":
         st.session_state.manifesto = f"Sứ mệnh của bạn là lấy {hi} làm mũi nhọn bứt phá, đồng thời hoàn thiện {lo} để xây dựng một đế chế năng lực bền vững."
 
     if st.session_state.analysis_done:
-        tab1, tab2, tab3 = st.tabs(["📊 BIỂU ĐỒ", "🔮 PHÂN TÍCH CHI TIẾT", "📜 TUYÊN NGÔN"])
+        tab1, tab2, tab3 = st.tabs(["📊 BIỂU ĐỒ", "🔮 PHÂN TÍCH", "📜 TUYÊN NGÔN"])
         with tab1:
             vals = list(st.session_state.skills.values())
             fig = go.Figure(go.Scatterpolar(r=vals + [vals[0]], theta=list(st.session_state.skills.keys()) + [list(st.session_state.skills.keys())[0]], fill='toself', fillcolor='rgba(0, 242, 255, 0.25)', line_color='#00f2ff'))
